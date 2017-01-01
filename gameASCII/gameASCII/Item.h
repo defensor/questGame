@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-#define BASE_LVL_UPDATE_DIFERENCE 5
+#define BASE_LVL_UPDATE_DIFFERENCE 5
 
 class Item
 {
@@ -13,7 +13,7 @@ public:
 	// Getters
 	string getName()const{ return _name; }
 	int getPrice()const{ return _price; }
-	int getUpdatePrice()const{ return _baseUpdatePrice + BASE_LVL_UPDATE_DIFERENCE * this->_level;; }
+	int getUpdatePrice()const{ return _baseUpdatePrice + BASE_LVL_UPDATE_DIFFERENCE * this->_level;; }
 	float getDefense()const{ return _defense + _defenceUpdateDifference * _level; }
 	float getDamage()const{ return _damage + _damageUpdateDifference * _level; }
 	short getLevel()const{ return _level; }
