@@ -1,54 +1,51 @@
 #include <iostream>
-#include <string>
-#include <conio.h>
 #include "NPC.h"
 #include "Level.h"
-
 
 
 NPC::NPC(char tile) :
 _tile(tile)
 {
-	switch (_tile)
+	switch (this->_tile)
 	{
-	case SELLER_TILE: _name = "Seller";
+	case SELLER_TILE: this->_name = "Seller";
 		break;
-	case SMITH_TILE: _name = "Koval";
+	case SMITH_TILE: this->_name = "Koval";
 		break;
 	}
 }
 
 void NPC::setPosition(int x, int y)
 {
-	_x = x;
-	_y = y;
+	this->_x = x;
+	this->_y = y;
 }
 
-Item NPC::gettingItem(short id)
+Item NPC::extractItem(short id)
 {
-	Item item = _items.at(id);
-	_items[id] = _items.back();
-	_items.pop_back();
+	Item item = this->_items.at(id);
+	this->_items[id] = this->_items.back();
+	this->_items.pop_back();
 	return item;
 }
 
 bool NPC::isItem(short id) const
 {
-	return ((id >= 0) && (id < _items.size()))? true:false;
+	return (id >= 0) && (id < _items.size());
 }
 
 void NPC::showSellerDialog(unsigned money)
 {
-	int itemVal = _items.size();
+	int itemsNum = this->_items.size();
 	system("CLS");
-	cout << "Money: " << money << endl;
-	cout << this->_name << endl << endl;
-	cout << this->_name << " have " << itemVal << " items." << endl;
-	if (itemVal > 0)
-		cout << "\tNAME\tPRICE\tDMG\tDEF" << endl;
-	for (int j = 0; j < itemVal; j++)
-		cout << j + 1 << ".\t" << _items.at(j).getName() << "\t" << _items.at(j).getPrice() << "\t" << _items.at(j).getDamage() * 100 << "%\t" << _items.at(j).getDefense() * 100 << "%" << endl;
-	cout << "0. Exit.";
+	printf("Money: %u\n", money);
+	printf("%s\n\n", this->_name);
+	printf("%s have %u items.\n", this->_name, itemsNum);
+	if (itemsNum > 0)
+		printf("\tNAME\tPRICE\tDMG\tDEF\n");
+	for (int j = 0; j < itemsNum; j++)
+		printf("%d.\t%s\t%d\t%d%%\t%d%%\n", j + 1, this->_items.at(j).getName(), this->_items.at(j).getPrice(), this->_items.at(j).getDamage() * 100, this->_items.at(j).getDefense() * 100);
+	printf("0. Exit.");
 
 }
 
@@ -58,9 +55,9 @@ void NPC::showSmithDialog(Items items, unsigned money)
 	int count = 0;
 
 	system("CLS");
-	cout << "Money: " << money << endl;
-	cout << this->_name << endl << endl;
-	cout << this->_name << " can upgrade your items." << endl;
+	printf("Money: %u", money);
+	printf("%s\n\n", this->_name);
+	printf("%s can upgrade your items.\n", this->_name);
 
 	bool isUpgradebleItem = false;
 	for (int i = 0; i < itemVal && !isUpgradebleItem; i++)
@@ -68,11 +65,11 @@ void NPC::showSmithDialog(Items items, unsigned money)
 			isUpgradebleItem = true;
 
 	if (isUpgradebleItem)
-		cout << "\tNAME\tLEVEL\tPRICE\tCUR DMG\tCUR DEF\tUP DMG\tUP DEF" << endl;
+		printf("\tNAME\tLEVEL\tPRICE\tCUR DMG\tCUR DEF\tUP DMG\tUP DEF\n");
 	for (vector<Item>::const_iterator ci = items.begin(); ci < items.end(); ci++)
 		if (ci->getLevel() < 10)
-			cout << ++count << ".\t" << ci->getName() << "\t" << ci->getLevel() <<"\t" << ci->getUpdatePrice() << "\t" << ci->getDamage()*100 << "%\t" << ci->getDefense()*100 << "%\t" << (ci->getDamage() + ci->getDamageUpdateDifference())*100 << "%\t" << (ci->getDefense() + ci->getDefenceUpdateDifference())*100 << "%" << endl;
-	cout << "0. Exit.";
+			printf("%d.\t%s\t%u\t%u\t%u%%\t%u%%\t%u%%\t%u%%\n", ++count, ci->getName(), ci->getLevel(), ci->getUpdatePrice(), ci->getDamage() * 100, ci->getDefense() * 100, (ci->getDamage() + ci->getDamageUpdateDifference()) * 100, (ci->getDefense() + ci->getDefenceUpdateDifference()) * 100);
+	printf("0. Exit.");
 }
 
 void NPC::initSellerDialog(Player & player)
@@ -82,7 +79,7 @@ void NPC::initSellerDialog(Player & player)
 	char choice = ' ';
 	while (true)
 	{
-		choice = _getch();
+		choice = getchar();
 
 		if (choice == '0')
 			break;
@@ -94,19 +91,6 @@ void NPC::initSellerDialog(Player & player)
 	}
 }
 
-void NPC::initDialog(Player & player)
-{
-	switch (this->_tile)
-	{
-	case SELLER_TILE:
-		this->initSellerDialog(player);
-		break;
-	case SMITH_TILE:
-		this->initSmithDialog(player);
-		break;
-	}
-}
-
 void NPC::initSmithDialog(Player & player)
 {
 	this->showSmithDialog(player._items, player.getMoney());
@@ -114,7 +98,7 @@ void NPC::initSmithDialog(Player & player)
 	char choice = ' ';
 	while (true)
 	{
-		choice = _getch();
+		choice = getchar();
 
 		if (choice == '0')
 			break;
@@ -146,3 +130,17 @@ void NPC::initSmithDialog(Player & player)
 		player.reloadItem();
 	}
 }
+
+void NPC::initDialog(Player & player)
+{
+	switch (this->_tile)
+	{
+	case SELLER_TILE:
+		this->initSellerDialog(player);
+		break;
+	case SMITH_TILE:
+		this->initSmithDialog(player);
+		break;
+	}
+}
+

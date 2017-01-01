@@ -122,7 +122,7 @@ bool Player::buyItem(NPC & npc, short id)
 		if (this->getMoney() >= price)
 		{
 			this->subMoney(price);
-			this->giveItem(npc.gettingItem(id));
+			this->giveItem(npc.getItem(id));
 			this->reloadItem();
 			return true;
 		}
