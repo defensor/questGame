@@ -1,3 +1,1 @@
-# Tutorial
-
-This is my tutorial repository.
+Старая версия asciiGame из папки game
